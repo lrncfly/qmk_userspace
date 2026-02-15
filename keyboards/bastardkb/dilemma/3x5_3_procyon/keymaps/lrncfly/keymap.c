@@ -170,6 +170,17 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 // clang-format on
 #endif // ENCODER_MAP_ENABLE
 
+#ifdef RGB_MATRIX_CUSTOM_USER
+// Define RGB colors for each layer
+const RGB layer_rgb_colors[] = {
+    [LAYER_BASE]       = {RGB_WHITE},
+    [LAYER_FUNCTION]   = {RGB_RED},
+    [LAYER_NAVIGATION] = {RGB_GOLD},
+    [LAYER_MEDIA]      = {RGB_YELLOW},
+    [LAYER_POINTER]    = {RGB_PINK},
+    [LAYER_NUMERAL]    = {RGB_ORANGE},
+    [LAYER_SYMBOLS]    = {RGB_GREEN}
+};
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (get_highest_layer(layer_state) > 0) {
         uint8_t layer = get_highest_layer(layer_state);
@@ -180,10 +191,11 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
                 if (index >= led_min && index < led_max && index != NO_LED &&
                 keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
-                    rgb_matrix_set_color(index, RGB_GREEN);
+                    rgb_matrix_set_color(index, layer_rgb_colors[layer].r, layer_rgb_colors[layer].g, layer_rgb_colors[layer].b);
                 }
             }
         }
     }
     return false;
 }
+#endif
