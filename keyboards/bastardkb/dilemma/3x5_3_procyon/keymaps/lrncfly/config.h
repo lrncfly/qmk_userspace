@@ -26,6 +26,8 @@
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8
 #define ENCODER_RESOLUTION 4
 
+#define NO_MUSIC_MODE
+
 #define RGB_MATRIX_SLEEP // turn off effects when suspended
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
