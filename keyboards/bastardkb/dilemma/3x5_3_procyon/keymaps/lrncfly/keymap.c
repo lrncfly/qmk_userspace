@@ -193,6 +193,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                 keymap_key_to_keycode(layer, (keypos_t){col,row}) > KC_TRNS) {
                     rgb_matrix_set_color(index, layer_rgb_colors[layer].r, layer_rgb_colors[layer].g, layer_rgb_colors[layer].b);
                 }
+                else {rgb_matrix_set_color(index, RGB_OFF);}
             }
         }
     }
