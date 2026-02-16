@@ -30,9 +30,12 @@
 #define NO_MUSIC_MODE
 
 #define RGB_MATRIX_SLEEP // turn off effects when suspended
-#define RGBLIGHT_LAYERS
+// #define RGB_MATRIX_DEFAULT_FLAGS LED_FLAG_ALL // Sets the default LED flags, if none has been set
+#define RGB_MATRIX_DEFAULT_ON true // Sets the default enabled state, if none has been set
+// #define RGB_MATRIX_FLAG_STEPS { LED_FLAG_KEYLIGHT  } // Sets the flags which can be cycled through.
+#define RGB_MATRIX_SLEEP // turn off effects when suspended
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_RAINDROPS
-#define RGBLIGHT_LAYERS_RETAIN_VAL
+#define RGB_MATRIX_TIMEOUT 60000 // number of milliseconds to wait until rgb automatically turns off
 
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
