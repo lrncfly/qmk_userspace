@@ -50,10 +50,10 @@ enum dilemma_keymap_layers {
 /** \brief QWERTY layout (3 rows, 10 columns). */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_split_3x5_3(
-       KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-       KC_A, LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G, KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), KC_QUOT,
-       PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH,
-                      ESC_MED, TAB_FUN, SPC_NAV, ENT_SYM, BSP_NUM, LGUI_T(KC_DEL)
+       KC_Q,         KC_W,         KC_E,         KC_R,    KC_T,    KC_Y,         KC_U,          KC_I,         KC_O,    KC_P,
+       KC_A, LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F),    KC_G,    KC_H, RSFT_T(KC_J),  RCTL_T(KC_K), RALT_T(KC_L), KC_QUOT,
+       PT_Z,         KC_X,        KC_C,          KC_V,    KC_B,    KC_N,         KC_M,       KC_COMM,       KC_DOT, PT_SLSH,
+                               ESC_MED,       TAB_FUN, SPC_NAV, ENT_SYM,      BSP_NUM, LGUI_T(KC_DEL)
   ),
 
 /*
@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_MEDIA] = LAYOUT_split_3x5_3(
     XXXXXXX, RM_PREV, RM_TOGG, RM_NEXT, XXXXXXX, XXXXXXX, RM_PREV, RM_TOGG, RM_NEXT, XXXXXXX,
     KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT,
-    XXXXXXX, RM_VALD, XXXXXXX, RM_VALU, XXXXXXX, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, XXXXXXX,
+    RM_SPDD, RM_VALD, XXXXXXX, RM_VALU, RM_SPDU, RM_HUEU, RM_HUED, RM_SATU, RM_SATD, XXXXXXX,
                       _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY, KC_MUTE
   ),
 
