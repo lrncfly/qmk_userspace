@@ -20,33 +20,51 @@
 // #define AUTO_SHIFT_TIMEOUT 200
 
 #define CAPS_WORD_INVERT_ON_SHIFT
-
 // #define DILEMMA_DEFAULT_DPI_CONFIG_STEP 200
 // #define DILEMMA_DRAGSCROLL_DPI 250
 // #define DILEMMA_MINIMUM_DEFAULT_DPI 200
 // #define DILEMMA_MINIMUM_SNIPING_DPI 150
 // #define DILEMMA_SNIPING_DPI_CONFIG_STEP 100
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8
-
-#define ENCODER_RESOLUTION 4
+// #define ENCODER_RESOLUTION 4
 
 #define FLOW_TAP_TERM 150
 
-// #define LED_MATRIX_DEFAULT_MODE LED_MATRIX_SOLID // Sets the default mode, if none has been set
+#ifdef LAYER_MENU
+#    undef LAYER_MENU
+#endif
+#define LAYER_MENU 7
+
+// #define LED_MATRIX_DEFAULT_MODE LED_MATRIX_SOLID
+// Sets the default mode, if none has been set
 
 #define NO_MUSIC_MODE
 
-// #define RGB_MATRIX_DEFAULT_FLAGS LED_FLAG_ALL // Sets the default LED flags, if none has been set
-#define RGB_MATRIX_DEFAULT_ON true // Sets the default enabled state, if none has been set
-// #define RGB_MATRIX_FLAG_STEPS { LED_FLAG_KEYLIGHT  } // Sets the flags which can be cycled through.
+#define RGBLIGHT_LAYERS_RETAIN_VAL
+
+#define RGB_MATRIX_ALLOWED_FLAGS LED_FLAG_KEYLIGHT
+// #define RGB_MATRIX_DEFAULT_FLAGS LED_FLAG_ALL
+// Sets the default LED flags
+#define RGB_MATRIX_DEFAULT_ON true
+// Sets the default enabled state, if none has been set
+// #define RGB_MATRIX_FLAG_STEPS { LED_FLAG_ALL, LED_FLAG_KEYLIGHT |
+// LED_FLAG_MODIFIER, LED_FLAG_UNDERGLOW, LED_FLAG_NONE }
+// Sets the flags which can be cycled through.
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINDROPS
-#define RGB_MATRIX_SLEEP // turn off effects when suspended
-#define RGB_MATRIX_TIMEOUT 60000 // number of milliseconds to wait until rgb automatically turns off
+#define RGB_MATRIX_DEFAULT_VAL 128
+#define RGB_MATRIX_LED_COUNT 72
+#define RGB_MATRIX_LED_PROCESSOR_CONTINUE
+#define RGB_MATRIX_SLEEP
+// turn off effects when suspended
+#define RGB_MATRIX_SKIP_FRAMES
+// Helps with split sync performance
+#define RGB_MATRIX_TIMEOUT 60000
+// number of milliseconds to wait until rgb automatically turns off
 
 // #define RGBLIGHT_LAYERS
-
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
+#define SPLIT_TRANSPORT_MIRROR
 
 // #define TAP_CODE_DELAY 255
 
@@ -87,12 +105,12 @@
 #undef ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 #undef ENABLE_RGB_MATRIX_RAINBOW_PINWHEELS
 // #undef ENABLE_RGB_MATRIX_RAINDROPS
-// #undef ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-// #undef ENABLE_RGB_MATRIX_PIXEL_FLOW
+#undef ENABLE_RGB_MATRIX_PIXEL_FRACTAL
+#undef ENABLE_RGB_MATRIX_PIXEL_FLOW
 #undef ENABLE_RGB_MATRIX_PIXEL_RAIN
 
 #undef ENABLE_RGB_MATRIX_TYPING_HEATMAP
-// #undef ENABLE_RGB_MATRIX_DIGITAL_RAIN
+#undef ENABLE_RGB_MATRIX_DIGITAL_RAIN
 
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE
@@ -102,7 +120,7 @@
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
 #undef ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-#undef ENABLE_RGB_MATRIX_SPLASH
+// #undef ENABLE_RGB_MATRIX_SPLASH
 #undef ENABLE_RGB_MATRIX_MULTISPLASH
 #undef ENABLE_RGB_MATRIX_SOLID_SPLASH
 #undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH

@@ -1,0 +1,6 @@
+{
+    "modules": [
+        "bastardkb/dilemma_sync",
+        "lrncfly/my_lcd"
+        ]
+}
