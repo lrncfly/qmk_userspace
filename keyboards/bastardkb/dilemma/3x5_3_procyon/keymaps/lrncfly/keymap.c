@@ -24,10 +24,7 @@
 #    include "print.h"
 #endif
 
-#include "my_lcd.h"
-
-extern lcd_module_t lcd_module_my_dashboard;
-
+#include "modules/lrncfly/my_lcd/my_lcd.h"
 enum custom_keycodes { QK_REG = SAFE_RANGE, QK_HELP, MY_DB_TOGG, MY_DB_STEP, LCD_BUP, LCD_BDN };
 
 bool led_debug_enabled   = false;
@@ -45,7 +42,7 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
 #define ENT_SYM LT(LAYER_SYMBOLS, KC_ENT)
 #define BSP_NUM LT(LAYER_NUMERAL, KC_BSPC)
 #define SPC_NUM LT(LAYER_NUMERAL, KC_SPC)
-// #define _L_LCD(KC) LT(LAYER_LCD, KC)
+#define _L_LCD(KC) LT(LAYER_LCD, KC)
 #define _L_PTR(KC) LT(LAYER_POINTER, KC)
 
 #ifndef POINTING_DEVICE_ENABLE
@@ -127,12 +124,12 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
     KC_UNDO, KC_CUT, KC_COPY, KC_PASTE, XXXXXXX,  KC_INS, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, \
                      XXXXXXX,  XXXXXXX, _______,  XXXXXXX, XXXXXXX, XXXXXXX
 
-/* #define LAYOUT_LAYER_LCD                                                                           \
-     _______,    LCD_BDN, LCD_BUP, QK_REG, MY_DB_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, \
-     XXXXXXX, MY_DB_STEP,   LCDPR,  LCDNE,    XXXXXXX, QK_HELP, XXXXXXX,   LCDPR,   LCDNE, XXXXXXX, \
-          _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
-                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-*/
+#define LAYOUT_LAYER_LCD                                                                           \
+    _______,    LCD_BDN, LCD_BUP, QK_REG, MY_DB_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, \
+    XXXXXXX, MY_DB_STEP,   LCDPR,  LCDNE,    XXXXXXX, QK_HELP, XXXXXXX,   LCDPR,   LCDNE, XXXXXXX, \
+         _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
+                           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+
 /**
 * \brief Numeral layout.
 *
@@ -216,7 +213,7 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
     L10, L11, L12, L13, L14, R15, R16, R17, R18, R19,                  \
     L20, L21, L22, L23, L24, R25, R26, R27, R28, R29,                  \
     ...)                                                               \
-     L00, L01, L02, L03, L04, R05, R06, R07, R08, R09, \
+     _L_LCD(L00), L01, L02, L03, L04, R05, R06, R07, R08, _L_LCD(R09), \
              L10, L11, L12, L13, L14, R15, R16, R17, R18,         R19, \
              L20, L21, L22, L23, L24, R25, R26, R27, R28,         R29, \
       __VA_ARGS__
@@ -232,7 +229,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_NUMERAL]    = LAYOUT_wrapper(LAYOUT_LAYER_NUMERAL),
     [LAYER_POINTER]    = LAYOUT_wrapper(LAYOUT_LAYER_POINTER),
     [LAYER_SYMBOLS]    = LAYOUT_wrapper(LAYOUT_LAYER_SYMBOLS),
-    // [LAYER_LCD]        = LAYOUT_wrapper(LAYOUT_LAYER_LCD),
+    [LAYER_LCD]        = LAYOUT_wrapper(LAYOUT_LAYER_LCD),
 };
 
 // clang-format on
@@ -258,18 +255,6 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 // clang-format on
 #endif // ENCODER_MAP_ENABLE
-
-// Hook into QMK's keyboard initialization phase to register our canvas elements
-void keyboard_post_init_user(void) {
-    if (is_keyboard_left()) {
-        // Run our layout builder safely inside the initialization pool
-        lcd_module_my_dashboard.init_module();
-
-        // Force the screen manager to boot into our minimalist setup as the
-        // standard home slate
-        lcd_module_my_dashboard.load_module();
-    }
-}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -308,12 +293,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 uprintf("Index: %d | Flags: %d\n", current_debug_index, g_led_config.flags[current_debug_index]);
             }
             return false;
-#endif // CONSOLE_ENABLE
-        case LCD_BUP:
-            backlight_increase(); // Steps up by 1 (out of 16)
+#endif                        // CONSOLE_ENABLE
+        case QK_BACKLIGHT_UP: // Or whatever your custom keycode is named
+            if (record->event.pressed) {
+                tap_code16(BL_UP); // Correct 16-bit quantum keycode handler
+            }
             return false;
-        case LCD_BDN:
-            backlight_decrease(); // Steps down by 1 (out of 16)
+
+        case QK_BACKLIGHT_DOWN: // Or whatever your custom keycode is named
+            if (record->event.pressed) {
+                tap_code16(BL_DOWN); // Correct 16-bit quantum keycode handler
+            }
             return false;
     }
     return true;
@@ -359,7 +349,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
                     case LAYER_POINTER:    hsv = (HSV){HSV_CYAN};        break;
                     case LAYER_SYMBOLS:    hsv = (HSV){HSV_GOLD};        break;
                     case LAYER_NUMERAL:    hsv = (HSV){HSV_PINK};        break;
-                    // case LAYER_LCD:        hsv = (HSV){HSV_GOLDENROD};   break;
+                    case LAYER_LCD:        hsv = (HSV){HSV_GOLDENROD};   break;
                         // clang-format on
                 }
             }
@@ -378,33 +368,35 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 #endif
 
-// Hook into the housekeeping pipeline to trigger our frame data refresh rate
-void housekeeping_task_user(void) {
-    if (is_keyboard_left()) {
-        // Run our background loop updates (WPM calculations & Mod tracking)
-        lcd_module_my_dashboard.housekeeping_task();
-    }
-}
-
 layer_state_t layer_state_set_user(layer_state_t state) {
     if (is_keyboard_master() && is_keyboard_left()) {
         switch (get_highest_layer(state)) {
             case LAYER_NAVIGATION:
             case LAYER_POINTER:
-                // When on trackpad modes, you can point the router to the factory
-                // screen base which has the mouse tracking bars built inside it!
-                set_current_module(0); // Index 0 is lcd_module_base upstream
                 break;
-
             default:
-                // Snap completely back to our custom minimalist home layout
-                lcd_module_my_dashboard.load_module();
                 break;
         }
     }
     return state;
 }
 
+// 1. Declare your custom dashboard functions so keymap.c can see them
+// void init_my_custom_dashboard(void);
+void housekeeping_my_custom_dashboard(void);
+
+// 2. Native QMK Boot Hook: Triggers right when the keyboard powers on
+void keyboard_post_init_user(void) {
+    // init_my_custom_dashboard();
+}
+// Use QMK's official automated display initialization callback
+void lvgl_ui_init(void) {
+    init_my_custom_dashboard();
+}
+// 3. Native QMK Loop Hook: Triggers continuously while you type to refresh the screen
+void housekeeping_task_user(void) {
+    housekeeping_my_custom_dashboard();
+}
 /*                                                                      \
  * Left Side (Indices 0-35)                 Right Side (Indices 36-71)  \
  * [00][01][02][03][04]                     [36][37][38][39][40]        \
