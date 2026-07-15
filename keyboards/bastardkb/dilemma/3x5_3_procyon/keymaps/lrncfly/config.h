@@ -35,6 +35,13 @@
 #endif
 #define LAYER_MENU 7
 
+// Resolve split RPC ID collision between argos module and lcd module
+#ifdef SPLIT_TRANSACTION_IDS_KB
+#    undef SPLIT_TRANSACTION_IDS_KB
+#endif
+
+#define SPLIT_TRANSACTION_IDS_KB RPC_ID_KEYCODE_SYNC, RPC_ID_DILEMMA_SYNC, RPC_ID_RGB_SYNC
+
 // #define LED_MATRIX_DEFAULT_MODE LED_MATRIX_SOLID
 // Sets the default mode, if none has been set
 
