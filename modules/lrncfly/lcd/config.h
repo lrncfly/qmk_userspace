@@ -1,7 +1,7 @@
 #pragma once
 
 // TODO move this to a module definition, move the dilemma sync definition to the sync module
-#define SPLIT_TRANSACTION_IDS_KB RPC_ID_KEYCODE_SYNC, RPC_ID_DILEMMA_SYNC
+// #define SPLIT_TRANSACTION_IDS_KB RPC_ID_KEYCODE_SYNC, RPC_ID_DILEMMA_SYNC
 
 // QP stuff
 #define SPI_SCK_PIN GP22  // as per vik connector
@@ -19,18 +19,7 @@
 #define BACKLIGHT_PWM_DRIVER PWMD2
 #define BACKLIGHT_PWM_CHANNEL RP2040_PWM_CHANNEL_A
 
-// 1. Revert back to the working hardware controller
 #define SPI_DRIVER SPID0
-
-// 2. Explicitly tell QMK that multiple devices are talking on SPID0
-#define SPI_SHARED_BUS TRUE
-
-// 3. Ensure Quantum Painter drops its hold on the bus when not actively pushing pixels
-#define QUANTUM_PAINTER_SHARE_SPI TRUE
-
-// 4. Give the trackpoint breathing room by throttling Quantum Painter updates
-#define QUANTUM_PAINTER_TASK_THROTTLE 40 // Lowers SPI bus saturation
-
 #define LCD_SPI_DIVISOR 2
 #define LCD_WAIT_TIME 150
 #define LCD_ROTATION QP_ROTATION_0
@@ -64,6 +53,7 @@
 
 // Custom display stuff
 #define BK_PALETTE LV_PALETTE_CYAN
+#define LAYER_MENU 4
 
 #define SPLIT_TRANSPORT_MIRROR
 #define SPLIT_MODS_ENABLE

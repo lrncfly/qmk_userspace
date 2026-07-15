@@ -1,16 +1,16 @@
 #include QMK_KEYBOARD_H
-#include "lvgl.h" // Pulls in the LVGL graphics library types
-// #include "quantum.h"     // The absolute master header for all QMK features
-#include "qp.h" // Quantum Painter Core API
-#include "my_lcd.h" // Your local module header
-#include "modules/bastardkb/dilemma_sync/dilemma_sync.h"
-#include "layers.h" // Your local header for layer definitions and related utilities
+#include "my_lcd.h"
+#include "dilemma_sync.h"
+#include "layers.h"
+#include "lvgl.h"
+#include "qp.h"
+#include "ui_elements.h"
 
 // Master Screen Slate
 static lv_obj_t *ui_my_screen;
 
 // 1. Persistent Header Containers & Widgets
-lv_obj_t *label_status_tag = NULL;
+static lv_obj_t *label_status_tag;
 static lv_obj_t *badge_shift;
 static lv_obj_t *badge_alt;
 static lv_obj_t *badge_ctrl;
@@ -32,7 +32,7 @@ static lv_obj_t *label_snipe_val;
 
 static lv_obj_t *bar_lcd;
 static lv_obj_t *label_lcd_val;
-// static lv_obj_t* bar_rgb;
+static lv_obj_t *bar_rgb;
 static lv_obj_t *label_rgb_val;
 
 // Helper to safely fetch dilemma state (borrowed conceptually from base screen logic)
@@ -40,121 +40,62 @@ extern dilemma_status_t get_dilemma_status(void);
 
 // --- Initialization Phase ---
 void init_my_custom_dashboard(void) {
-    // DO NOT CALL ANY qp_ functions here!
-    // Let QMK's background integration framework wake up the display.
-
-    lv_obj_t *scr = lv_scr_act();
-    if (scr != NULL) {
-        label_status_tag = lv_label_create(scr);
-        if (label_status_tag != NULL) {
-            lv_label_set_text(label_status_tag, "INIT");
-            lv_obj_align(label_status_tag, LV_ALIGN_CENTER, 0, 0);
-        }
-    }
-}
-
-void init_my_custom_dashboard2(void) {
-    // 1. No hardware init lines needed here!
-    // QMK's LVGL integration layer has already powered on the ST7789 panel.
-
-    // 2. Draw your status tag directly onto the active LVGL viewport screen
-    label_status_tag = lv_label_create(lv_scr_act());
-    if (label_status_tag != NULL) {
-        lv_label_set_text(label_status_tag, "INIT");
-    }
-
-    // ...
     ui_my_screen = lv_obj_create(NULL);
 
     // Create the master base column wrapper
-    lv_obj_t *main_cont = lv_obj_create(ui_my_screen);
+    lv_obj_t *main_cont = ui_create_container(ui_my_screen);
 
     // ==========================================
     // PERSISTENT ZONE (Always visible at top)
     // ==========================================
     // Header Zone: Status Indicator (Primary/Secondary)
-    label_status_tag = lv_label_create(main_cont);
+    label_status_tag = ui_create_layer_label(main_cont);
     lv_label_set_text(label_status_tag, is_keyboard_master() ? "MASTER" : "SLAVE");
 
     // Horizontal modifier block
-    // 1. Create a native LVGL button widget inside your main container
-    badge_shift = lv_btn_create(main_cont);
+    badge_shift = ui_create_mod_button(main_cont, "SHFT", true, MOD_MASK_SHIFT);
+    badge_alt   = ui_create_mod_button(main_cont, "ALT", false, MOD_MASK_ALT);
+    badge_ctrl  = ui_create_mod_button(main_cont, "CTRL", false, MOD_MASK_CTRL);
+    badge_gui   = ui_create_mod_button(main_cont, "GUI", false, MOD_MASK_GUI);
 
-    // 2. Create a label inside that button to hold the text
-    lv_obj_t *shift_label = lv_label_create(badge_shift);
-    lv_label_set_text(shift_label, "SHFT");
+    ui_create_line_separator(main_cont, 1, 3);
 
-    // 1. Create a native LVGL button widget inside your main container
-    badge_ctrl = lv_btn_create(main_cont);
-
-    // 2. Create a label inside that button to hold the text
-    lv_obj_t *ctrl_label = lv_label_create(badge_ctrl);
-    lv_label_set_text(ctrl_label, "CRTL");
-
-    // 1. Create a native LVGL button widget inside your main container
-    badge_alt = lv_btn_create(main_cont);
-
-    // 2. Create a label inside that button to hold the text
-    lv_obj_t *alt_label = lv_label_create(badge_alt);
-    lv_label_set_text(alt_label, "ALT");
-
-    // 1. Create a native LVGL button widget inside your main container
-    badge_gui = lv_btn_create(main_cont);
-
-    // 2. Create a label inside that button to hold the text
-    lv_obj_t *gui_label = lv_label_create(badge_gui);
-    lv_label_set_text(gui_label, "GUI");
-
-    // 1. Create a native LVGL line object
-    lv_obj_t *line_sep = lv_line_create(main_cont);
-
-    // 2. Define the start point (0,0) and end point (100,0) to draw a horizontal line
-    static lv_point_t line_points[] = {{0, 0}, {100, 0}};
-
-    // 3. Assign the points to your line widget
-    lv_line_set_points(line_sep, line_points, 2);
     // ==========================================
     // VIEW A: DEFAULT VIEW (WPM Meter)
     // ==========================================
-    // --- WPM Dashboard Segment ---
-    lv_obj_t *wpm_title = lv_label_create(cont_default_view);
-    lv_label_set_text(wpm_title, "WPM");
-
-    label_wpm_value = lv_label_create(cont_default_view);
-    lv_label_set_text(label_wpm_value, "00");
-
-    bar_wpm = lv_bar_create(cont_default_view);
-    lv_bar_set_range(bar_wpm, 0, 100);
+    cont_default_view = ui_create_container(main_cont);
+    ui_create_secondary_text(cont_default_view, "WPM", true, 1);
+    label_wpm_value = ui_create_number_label(cont_default_view, 2);
+    lv_label_set_text(label_wpm_value, "0");
+    bar_wpm = ui_create_progress_bar(cont_default_view, 4);
     lv_bar_set_value(bar_wpm, 0, LV_ANIM_OFF);
 
     // ==========================================
     // VIEW B: POINTER VIEW (DPI / Snipe metrics)
     // ==========================================
-    // --- DPI Dashboard Segment ---
-    lv_obj_t *dpi_title = lv_label_create(cont_pointer_view);
-    lv_label_set_text(dpi_title, "DPI");
+    cont_pointer_view = ui_create_container(main_cont);
 
-    label_dpi_val = lv_label_create(cont_pointer_view);
-    lv_label_set_text(label_dpi_val, "0000");
+    ui_create_secondary_text(cont_pointer_view, "DPI", true, 1);
+    label_dpi_val = ui_create_number_label(cont_pointer_view, 1);
+    bar_dpi       = ui_create_progress_bar(cont_pointer_view, 4);
+
+    ui_create_secondary_text(cont_pointer_view, "SNIPE", true, 1);
+    label_snipe_val = ui_create_number_label(cont_pointer_view, 1);
+    bar_snipe       = ui_create_progress_bar(cont_pointer_view, 4);
 
     // ==========================================
     // VIEW C: MEDIA VIEW (RGB / LCD metrics)
     // ==========================================
-    cont_media_view = lv_obj_create(main_cont);
+    cont_media_view = ui_create_container(main_cont);
 
-    // --- DPI Dashboard Segment ---
-    lv_obj_t *lcd_title = lv_label_create(cont_pointer_view);
-    lv_label_set_text(lcd_title, "LCD");
+    ui_create_secondary_text(cont_media_view, "LCD", true, 1);
+    label_lcd_val = ui_create_number_label(cont_media_view, 1);
+    bar_lcd       = ui_create_progress_bar(cont_media_view, 4);
 
-    label_lcd_val = lv_label_create(cont_pointer_view);
-    lv_label_set_text(label_lcd_val, "0000");
+    ui_create_secondary_text(cont_media_view, "RGB", true, 1);
+    label_rgb_val = ui_create_number_label(cont_media_view, 1);
+    bar_rgb       = ui_create_progress_bar(cont_media_view, 4);
 
-    // --- DPI Dashboard Segment ---
-    lv_obj_t *rgb_title = lv_label_create(cont_pointer_view);
-    lv_label_set_text(rgb_title, "RGB");
-
-    label_rgb_val = lv_label_create(cont_pointer_view);
-    lv_label_set_text(label_rgb_val, "0000");
     // Default visibility settings at startup
     lv_obj_clear_flag(cont_default_view, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(cont_pointer_view, LV_OBJ_FLAG_HIDDEN);
@@ -274,11 +215,8 @@ void housekeeping_my_custom_dashboard(void) {
         char val_str[12];
 
         // Using standard QMK core API — works perfectly on the left side
-        // Old: uint8_t native_lcd_val = get_backlight_level();
-        // New: Read QMK's global backlight level tracker directly
-        // Swap out the missing function for a standard baseline value
-        // (Or use a raw number like 16 if you just want the indicator full)
-        uint8_t native_lcd_val = 16;
+        uint8_t native_lcd_val = get_backlight_level();
+
         snprintf(val_str, sizeof(val_str), "%u", native_lcd_val);
         lv_label_set_text(label_lcd_val, val_str);
 
@@ -290,3 +228,17 @@ void housekeeping_my_custom_dashboard(void) {
         lv_bar_set_value(bar_lcd, (uint16_t)lcd_rel, LV_ANIM_OFF);
     }
 }
+
+void set_current_module(uint8_t module_index) {
+    // Stub: Currently does nothing
+}
+
+// Global Export Structure
+lcd_module_t lcd_module_my_dashboard = {
+    .init_module                                      = &init_my_custom_dashboard,
+    .load_custom_theme_elements                       = NULL,
+    .load_module                                      = &load_my_custom_dashboard,
+    .update_custom_elements_styles_from_current_theme = NULL,
+    .process_record                                   = NULL,
+    .housekeeping_task                                = &housekeeping_my_custom_dashboard,
+};

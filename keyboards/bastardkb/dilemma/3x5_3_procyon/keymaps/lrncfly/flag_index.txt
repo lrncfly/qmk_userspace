@@ -1,0 +1,71 @@
+Index: 1 | Flags: 2 | underglow anticlockwise
+Index: 2 | Flags: 2 | underglow anticlockwise
+Index: 3 | Flags: 2 | underglow anticlockwise
+Index: 4 | Flags: 2 | underglow anticlockwise
+Index: 5 | Flags: 2 | underglow anticlockwise
+Index: 6 | Flags: 2 | underglow anticlockwise
+Index: 7 | Flags: 2 | underglow anticlockwise
+Index: 8 | Flags: 2 | underglow anticlockwise
+Index: 9 | Flags: 2 | underglow anticlockwise
+Index: 10 | Flags: 2 | underglow anticlockwise
+Index: 11 | Flags: 2 | underglow anticlockwise
+Index: 12 | Flags: 2 | underglow anticlockwise
+Index: 13 | Flags: 2 | underglow anticlockwise
+Index: 14 | Flags: 2 | underglow anticlockwise
+Index: 15 | Flags: 2 | underglow anticlockwise
+Index: 16 | Flags: 2 | underglow anticlockwise
+Index: 17 | Flags: 2 | underglow anticlockwise
+Index: 18 | Flags: 4 | T
+Index: 19 | Flags: 4 | R
+Index: 20 | Flags: 4 | E
+Index: 21 | Flags: 4 | W
+Index: 22 | Flags: 1 | Q
+Index: 23 | Flags: 1 | A
+Index: 24 | Flags: 4 | S
+Index: 25 | Flags: 4 | D
+Index: 26 | Flags: 4 | F
+Index: 27 | Flags: 4 | G
+Index: 28 | Flags: 4 | B
+Index: 29 | Flags: 4 | V
+Index: 30 | Flags: 4 | C
+Index: 31 | Flags: 4 | X
+Index: 32 | Flags: 1 | Z
+Index: 33 | Flags: 4 | Thumb outer
+Index: 34 | Flags: 4 | Thumb middle
+Index: 35 | Flags: 4 | Thumb inner
+Index: 36 | Flags: 2 | underglow clockwise
+Index: 37 | Flags: 2 | underglow clockwise
+Index: 38 | Flags: 2 | underglow clockwise
+Index: 39 | Flags: 2 | underglow clockwise
+Index: 40 | Flags: 2 | underglow clockwise
+Index: 41 | Flags: 2 | underglow clockwise
+Index: 42 | Flags: 2 | underglow clockwise
+Index: 43 | Flags: 2 | underglow clockwise
+Index: 44 | Flags: 2 | underglow clockwise
+Index: 45 | Flags: 2 | underglow clockwise
+Index: 46 | Flags: 2 | underglow clockwise
+Index: 47 | Flags: 2 | underglow clockwise
+Index: 48 | Flags: 2 | underglow clockwise
+Index: 49 | Flags: 2 | underglow clockwise
+Index: 50 | Flags: 2 | underglow clockwise
+Index: 51 | Flags: 2 | underglow clockwise
+Index: 52 | Flags: 2 | underglow clockwise
+Index: 53 | Flags: 2 | underglow clockwise
+Index: 54 | Flags: 4 | Y
+Index: 55 | Flags: 4 | U
+Index: 56 | Flags: 4 | I
+Index: 57 | Flags: 4 | O
+Index: 58 | Flags: 1 | P
+Index: 59 | Flags: 1 | '
+Index: 60 | Flags: 4 | L
+Index: 61 | Flags: 4 | K
+Index: 62 | Flags: 4 | J
+Index: 63 | Flags: 4 | H
+Index: 64 | Flags: 4 | N
+Index: 65 | Flags: 4 | M
+Index: 66 | Flags: 4 | ,
+Index: 67 | Flags: 4 | .
+Index: 68 | Flags: 1 | /
+Index: 69 | Flags: 4 | Thumb outer
+Index: 70 | Flags: 4 | Thumb middle
+Index: 71 | Flags: 4 | Thumb inner
