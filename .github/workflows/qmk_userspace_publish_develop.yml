@@ -29,6 +29,7 @@ jobs:
           fail_on_unmatched_files: false
           draft: false
           prerelease: true
+          make_latest: true
           files: |
             **/*.hex
             **/*.bin
