@@ -1,3 +1,4 @@
+# Enable QMK's Native Display & Graphics Stack
 QUANTUM_PAINTER_ENABLE = yes
 QUANTUM_PAINTER_DRIVERS += st7789_spi
 QUANTUM_PAINTER_DRIVERS += surface

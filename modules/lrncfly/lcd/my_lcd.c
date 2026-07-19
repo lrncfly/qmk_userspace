@@ -38,8 +38,28 @@ static lv_obj_t *label_rgb_val;
 // Helper to safely fetch dilemma state (borrowed conceptually from base screen logic)
 extern dilemma_status_t get_dilemma_status(void);
 
+painter_device_t lcd; // Global pointer for the driver
+
 // --- Initialization Phase ---
 void init_my_custom_dashboard(void) {
+    // 1. Low-level hardware initialization sequence
+    wait_ms(LCD_WAIT_TIME);
+
+    lcd = qp_st7789_make_spi_device(LCD_WIDTH, LCD_HEIGHT, LCD_CS_PIN, LCD_DC_PIN, LCD_RST_PIN, LCD_SPI_DIVISOR, SPI_MODE);
+    qp_init(lcd, LCD_ROTATION);
+    qp_set_viewport_offsets(lcd, LCD_OFFSET_X, LCD_OFFSET_Y);
+
+    // This dynamically hooks LVGL's internal memory manager to the display buffer
+    qp_lvgl_attach(lcd);
+
+    // Power display screen on
+    qp_power(lcd, 1);
+
+    // 2. Load the general formatting themes
+    load_themes();
+    init_styles();
+
+    // 3. NOW it is 100% safe to build your layout objects!
     ui_my_screen = lv_obj_create(NULL);
 
     // Create the master base column wrapper
