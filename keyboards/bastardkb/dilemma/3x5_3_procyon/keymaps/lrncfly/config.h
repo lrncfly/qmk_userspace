@@ -35,6 +35,8 @@
 #endif
 #define LAYER_MENU 7
 
+#define LV_FONT_MONTSERRAT_14 1
+
 // Resolve split RPC ID collision between argos module and lcd module
 #ifdef SPLIT_TRANSACTION_IDS_KB
 #    undef SPLIT_TRANSACTION_IDS_KB
