@@ -15,6 +15,6 @@ jobs:
 
   publish:
     name: 'QMK Userspace Publish'
-    uses: qmk/.github/.github/workflows/qmk_userspace_publish.yml@main
+    uses: bastardkb/qmk_userspace/.github/workflows/qmk_userspace_publish_develop.yml@develop
     if: always() && !cancelled()
     needs: build
