@@ -24,9 +24,9 @@
 #    include "print.h"
 #endif
 
-#include "my_lcd.h"
+#include "screen.h"
 
-extern lcd_module_t lcd_module_my_dashboard;
+extern lcd_module_t lcd_module_dashboard;
 
 enum custom_keycodes { QK_REG = SAFE_RANGE, QK_HELP, MY_DB_TOGG, MY_DB_STEP, LCD_BUP, LCD_BDN };
 
@@ -263,11 +263,11 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 void keyboard_post_init_user(void) {
     if (is_keyboard_left()) {
         // Run our layout builder safely inside the initialization pool
-        lcd_module_my_dashboard.init_module();
+        lcd_module_dashboard.init_module();
 
         // Force the screen manager to boot into our minimalist setup as the
         // standard home slate
-        lcd_module_my_dashboard.load_module();
+        lcd_module_dashboard.load_module();
     }
 }
 
@@ -382,7 +382,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 void housekeeping_task_user(void) {
     if (is_keyboard_left()) {
         // Run our background loop updates (WPM calculations & Mod tracking)
-        lcd_module_my_dashboard.housekeeping_task();
+        lcd_module_dashboard.housekeeping_task();
     }
 }
 
@@ -398,7 +398,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
             default:
                 // Snap completely back to our custom minimalist home layout
-                lcd_module_my_dashboard.load_module();
+                lcd_module_dashboard.load_module();
                 break;
         }
     }
