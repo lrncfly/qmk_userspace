@@ -1,5 +1,5 @@
-#ifndef MY_LCD_H
-#define MY_LCD_H
+#ifndef SCREEN_H
+#define SCREEN_H
 #include QMK_KEYBOARD_H
 #include "introspection.h"
 #include "lvgl.h"
@@ -41,6 +41,6 @@ void module_sync_handler(uint8_t initiator2target_buffer_size,
                          uint8_t target2initiator_buffer_size,
                          void *target2initiator_buffer);
 
-void init_my_custom_dashboard(void);
-void housekeeping_my_custom_dashboard(void);
+void init_custom_dashboard(void);
+void housekeeping_custom_dashboard(void);
 #endif

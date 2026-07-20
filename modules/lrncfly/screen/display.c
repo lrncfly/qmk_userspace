@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "my_lcd.h"
+#include "screen.h"
 #include "dilemma_sync.h"
 #include "layers.h"
 #include "lvgl.h"
@@ -7,7 +7,7 @@
 #include "ui_elements.h"
 
 // Master Screen Slate
-static lv_obj_t *ui_my_screen;
+static lv_obj_t *ui_screen;
 
 // 1. Persistent Header Containers & Widgets
 static lv_obj_t *label_status_tag;
@@ -41,7 +41,7 @@ extern dilemma_status_t get_dilemma_status(void);
 painter_device_t lcd; // Global pointer for the driver
 
 // --- Initialization Phase ---
-void init_my_custom_dashboard(void) {
+void init_custom_dashboard(void) {
     // 1. Low-level hardware initialization sequence
     wait_ms(LCD_WAIT_TIME);
 
@@ -60,10 +60,10 @@ void init_my_custom_dashboard(void) {
     init_styles();
 
     // 3. NOW it is 100% safe to build your layout objects!
-    ui_my_screen = lv_obj_create(NULL);
+    ui_screen = lv_obj_create(NULL);
 
     // Create the master base column wrapper
-    lv_obj_t *main_cont = ui_create_container(ui_my_screen);
+    lv_obj_t *main_cont = ui_create_container(ui_screen);
 
     // ==========================================
     // PERSISTENT ZONE (Always visible at top)
@@ -122,8 +122,8 @@ void init_my_custom_dashboard(void) {
     lv_obj_add_flag(cont_media_view, LV_OBJ_FLAG_HIDDEN);
 }
 
-void load_my_custom_dashboard(void) {
-    lv_scr_load(ui_my_screen);
+void load_custom_dashboard(void) {
+    lv_scr_load(ui_screen);
 }
 
 static void update_transient_mod(lv_obj_t *obj, uint8_t mod_mask, uint8_t current_mods) {
@@ -136,7 +136,7 @@ static void update_transient_mod(lv_obj_t *obj, uint8_t mod_mask, uint8_t curren
 }
 
 // --- Dynamic Rendering & Visibility Loop ---
-void housekeeping_my_custom_dashboard(void) {
+void housekeeping_custom_dashboard(void) {
     if (!is_keyboard_left()) return;
 
     // 1. Resolve active hardware status variables from QMK core layer
@@ -254,11 +254,11 @@ void set_current_module(uint8_t module_index) {
 }
 
 // Global Export Structure
-lcd_module_t lcd_module_my_dashboard = {
-    .init_module                                      = &init_my_custom_dashboard,
+lcd_module_t lcd_module_dashboard = {
+    .init_module                                      = &init_custom_dashboard,
     .load_custom_theme_elements                       = NULL,
-    .load_module                                      = &load_my_custom_dashboard,
+    .load_module                                      = &load_custom_dashboard,
     .update_custom_elements_styles_from_current_theme = NULL,
     .process_record                                   = NULL,
-    .housekeeping_task                                = &housekeeping_my_custom_dashboard,
+    .housekeeping_task                                = &housekeeping_custom_dashboard,
 };

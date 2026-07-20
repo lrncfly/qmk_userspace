@@ -1,7 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "ui_elements.h"
 #include "lvgl.h"
-#include "my_lcd.h"
+#include "screen.h"
 
 lv_obj_t *ui_create_container(lv_obj_t *parent) {
     lv_obj_t *cont = lv_obj_create(parent);

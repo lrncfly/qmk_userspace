@@ -1,6 +1,6 @@
 {
     "modules": [
-        "lrncfly/lcd",
+        "lrncfly/screen",
         "lrncfly/dilemma_sync"
     ]
 }

@@ -13,6 +13,6 @@ BACKLIGHT_DRIVER = pwm
 VPATH += $(CURRENT_DIR)
 
 # Module source files
-SRC += my_lcd.c
+SRC += display.c
 SRC += ui_elements.c
 SRC += theme.c  # if ui_elements depends on theme
