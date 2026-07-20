@@ -1,0 +1,3 @@
+[submodule "modules/lrncfly"]
+	path = modules/lrncfly
+	url = https://github.com/lrncfly/qmk_modules.git
