@@ -26,7 +26,7 @@
 // #define DILEMMA_MINIMUM_SNIPING_DPI 150
 // #define DILEMMA_SNIPING_DPI_CONFIG_STEP 100
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8
-// #define ENCODER_RESOLUTION 4
+#define ENCODER_RESOLUTION 4
 
 #define FLOW_TAP_TERM 150
 
@@ -35,26 +35,20 @@
 #endif
 #define LAYER_MENU 7
 
-#define LV_FONT_MONTSERRAT_14 1
-
-// Resolve split RPC ID collision between argos module and lcd module
-#ifdef SPLIT_TRANSACTION_IDS_KB
-#    undef SPLIT_TRANSACTION_IDS_KB
-#endif
-
-#define SPLIT_TRANSACTION_IDS_KB RPC_ID_KEYCODE_SYNC, RPC_ID_DILEMMA_SYNC, RPC_ID_RGB_SYNC
+#define LED_DPI_INDICATOR_INDEX 0
+#define LED_DPI_INDICATOR_COUNT 10
 
 // #define LED_MATRIX_DEFAULT_MODE LED_MATRIX_SOLID
 // Sets the default mode, if none has been set
 
 #define NO_MUSIC_MODE
 
-#define RGBLIGHT_LAYERS_RETAIN_VAL
+// #define RGBLIGHT_LAYERS_RETAIN_VAL
 
-#define RGB_MATRIX_ALLOWED_FLAGS LED_FLAG_KEYLIGHT
+// #define RGB_MATRIX_ALLOWED_FLAGS LED_FLAG_KEYLIGHT
 // #define RGB_MATRIX_DEFAULT_FLAGS LED_FLAG_ALL
 // Sets the default LED flags
-#define RGB_MATRIX_DEFAULT_ON true
+// #define RGB_MATRIX_DEFAULT_ON true
 // Sets the default enabled state, if none has been set
 // #define RGB_MATRIX_FLAG_STEPS { LED_FLAG_ALL, LED_FLAG_KEYLIGHT |
 // LED_FLAG_MODIFIER, LED_FLAG_UNDERGLOW, LED_FLAG_NONE }
@@ -62,6 +56,10 @@
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINDROPS
 #define RGB_MATRIX_DEFAULT_VAL 128
 #define RGB_MATRIX_LED_COUNT 72
+// Fix upstream Bastardkb module macro oversight for RGB Matrix setups
+#if defined(RGB_MATRIX_ENABLE) && !defined(RGBLIGHT_LED_COUNT)
+#    define RGBLIGHT_LED_COUNT RGB_MATRIX_LED_COUNT
+#endif
 #define RGB_MATRIX_LED_PROCESSOR_CONTINUE
 #define RGB_MATRIX_SLEEP
 // turn off effects when suspended
@@ -71,9 +69,6 @@
 // number of milliseconds to wait until rgb automatically turns off
 
 // #define RGBLIGHT_LAYERS
-#define SPLIT_LAYER_STATE_ENABLE
-#define SPLIT_LED_STATE_ENABLE
-#define SPLIT_TRANSPORT_MIRROR
 
 // #define TAP_CODE_DELAY 255
 
