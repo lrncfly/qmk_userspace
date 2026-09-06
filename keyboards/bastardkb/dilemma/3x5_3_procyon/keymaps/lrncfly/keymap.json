@@ -1,6 +1,6 @@
 {
     "modules": [
-        "lrncfly/screen",
-        "lrncfly/dilemma_sync"
+        "Bastardkb/argos",
+        "Bastardkb/bk_pointing_device"
     ]
 }
