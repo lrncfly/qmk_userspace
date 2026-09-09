@@ -222,9 +222,9 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 void keyboard_post_init_user(void) {}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (lcd_module_dashboard.process_record) {
-        lcd_module_dashboard.process_record(keycode, record);
-    }
+    // if (lcd_module_dashboard.process_record) {
+    //     lcd_module_dashboard.process_record(keycode, record);
+    // }
 
     switch (keycode) {
 #ifdef CONSOLE_ENABLE

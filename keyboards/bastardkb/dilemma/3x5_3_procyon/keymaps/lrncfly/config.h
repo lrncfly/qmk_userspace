@@ -38,6 +38,13 @@
 #define LED_DPI_INDICATOR_INDEX 0
 #define LED_DPI_INDICATOR_COUNT 10
 
+// Resolve split RPC ID collision between argos module and lcd module
+#ifdef SPLIT_TRANSACTION_IDS_KB
+#    undef SPLIT_TRANSACTION_IDS_KB
+#endif
+
+#define SPLIT_TRANSACTION_IDS_KB RPC_ID_KEYCODE_SYNC, RPC_ID_DILEMMA_SYNC, RPC_ID_RGB_SYNC, RPC_ID_MOUSE_SYNC
+
 // #define LED_MATRIX_DEFAULT_MODE LED_MATRIX_SOLID
 // Sets the default mode, if none has been set
 
@@ -69,6 +76,9 @@
 // number of milliseconds to wait until rgb automatically turns off
 
 // #define RGBLIGHT_LAYERS
+#define SPLIT_LAYER_STATE_ENABLE
+#define SPLIT_LED_STATE_ENABLE
+#define SPLIT_TRANSPORT_MIRROR
 
 // #define TAP_CODE_DELAY 255
 
