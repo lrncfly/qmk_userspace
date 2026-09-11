@@ -1,6 +1,8 @@
 [submodule "modules/lrncfly"]
 	path = modules/lrncfly
 	url = https://github.com/lrncfly/qmk_modules.git
+	branch = develop-lf
 [submodule "modules/bastardkb"]
 	path = modules/bastardkb
 	url = https://github.com/lrncfly/bastardkb-qmk_modules.git
+	branch = develop-lf
