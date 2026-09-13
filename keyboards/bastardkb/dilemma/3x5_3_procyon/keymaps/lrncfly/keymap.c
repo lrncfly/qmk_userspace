@@ -43,13 +43,6 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
 #define SPC_NUM LT(LAYER_NUMERAL, KC_SPC)
 #define _L_PTR(KC) LT(LAYER_POINTER, KC)
 
-#ifndef POINTING_DEVICE_ENABLE
-#    define DRGSCRL KC_NO
-#    define DPI_MOD KC_NO
-#    define S_D_MOD KC_NO
-#    define SNIPING KC_NO
-#endif // !POINTING_DEVICE_ENABLE
-
 #include "keymap.h"
 
 // clang-format off
