@@ -1,0 +1,236 @@
+{
+    "keyboard_name": "Dilemma 3x5_3 Procyon",
+    "features": {
+        "rgb_matrix": true
+    },
+    "rgblight": {
+        "led_count": 72,
+        "split": true,
+        "split_count": [
+            36,
+            36
+        ]
+    },
+    "rgb_matrix": {
+        "driver": "ws2812",
+        "led_count": 72,
+        "layout": [
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 2
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            },
+            {
+                "flags": 4
+            }
+        ]
+    }
+}

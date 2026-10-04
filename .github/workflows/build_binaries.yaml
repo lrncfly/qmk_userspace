@@ -16,5 +16,5 @@ jobs:
   publish:
     name: 'QMK Userspace Publish'
     uses: bastardkb/qmk_userspace/.github/workflows/qmk_userspace_publish.yml@main
-    if: always() && !cancelled()
+    if: always() && !cancelled() && startsWith(github.ref, 'refs/tags/')
     needs: build
