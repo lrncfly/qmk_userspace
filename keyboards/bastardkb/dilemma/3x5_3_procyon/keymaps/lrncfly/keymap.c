@@ -224,10 +224,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         screen_note_activity();
     }
 
-    // if (lcd_module_dashboard.process_record) {
-    //     lcd_module_dashboard.process_record(keycode, record);
-    // }
-
     switch (keycode) {
 #ifdef CONSOLE_ENABLE
         case QK_REG:
@@ -272,6 +268,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             backlight_decrease(); // Steps down by 1 (out of 16)
             return false;
     }
+    screen_process_keycode(keycode, record);
     return true;
 };
 
