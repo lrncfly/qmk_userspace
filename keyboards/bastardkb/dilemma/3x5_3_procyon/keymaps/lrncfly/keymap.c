@@ -25,7 +25,7 @@
 #    include "print.h"
 #endif
 
-enum custom_keycodes { QK_REG = SAFE_RANGE, QK_HELP, MY_DB_TOGG, MY_DB_STEP };
+enum custom_keycodes { QK_REG = SAFE_RANGE, QK_HELP, MY_DB_TOGG, MY_DB_STEP, LCD_BUP, LCD_BDN };
 
 bool led_debug_enabled   = false;
 int  current_debug_index = 0;
@@ -91,7 +91,7 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
 */
 #define LAYOUT_LAYER_MEDIA                                                                    \
     RM_VALD, RM_PREV, RM_TOGG, RM_NEXT, RM_VALU, RM_SATD, RM_PREV, RM_TOGG, RM_NEXT, RM_SATU, \
-    _______, KC_VOLD, KC_MUTE, KC_VOLU, _______, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
+    LCD_BDN, KC_VOLD, KC_MUTE, KC_VOLU, LCD_BUP, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
     _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
                       _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY, KC_MUTE
 
@@ -220,6 +220,10 @@ void keyboard_post_init_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        screen_note_activity();
+    }
+
     // if (lcd_module_dashboard.process_record) {
     //     lcd_module_dashboard.process_record(keycode, record);
     // }
@@ -261,6 +265,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 #endif // CONSOLE_ENABLE
+        case LCD_BUP:
+            backlight_increase(); // Steps up by 1 (out of 16)
+            return false;
+        case LCD_BDN:
+            backlight_decrease(); // Steps down by 1 (out of 16)
+            return false;
     }
     return true;
 };
