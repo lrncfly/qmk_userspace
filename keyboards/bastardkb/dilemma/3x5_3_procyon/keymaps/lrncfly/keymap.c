@@ -20,6 +20,7 @@
 #include "config.h"
 #include "layers.h"
 #include "screen.h"
+#include "argos_rgb.h"
 
 #ifdef CONSOLE_ENABLE
 #    include "print.h"
@@ -262,10 +263,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
 #endif // CONSOLE_ENABLE
         case LCD_BUP:
-            backlight_increase(); // Steps up by 1 (out of 16)
+            if (record->event.pressed) {
+                backlight_increase(); // Steps up by 1 (out of 16)
+            }
             return false;
         case LCD_BDN:
-            backlight_decrease(); // Steps down by 1 (out of 16)
+            if (record->event.pressed) {
+                backlight_decrease(); // Steps down by 1 (out of 16)
+            }
             return false;
     }
     screen_process_keycode(keycode, record);
@@ -273,55 +278,71 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 };
 
 #ifdef RGB_MATRIX_ENABLE
+enum {
+    LED_MODIFIER_ZONE_LEFT_FIRST  = 14,
+    LED_MODIFIER_ZONE_LEFT_LAST   = 17,
+    LED_MODIFIER_ZONE_RIGHT_FIRST = 50,
+    LED_MODIFIER_ZONE_RIGHT_LAST  = 53,
+};
+
+static HSV modifier_indicator_hsv(uint8_t mods) {
+    if (mods & MOD_MASK_SHIFT) return (HSV){HSV_RED};
+    if (mods & MOD_MASK_CTRL) return (HSV){HSV_BLUE};
+    if (mods & MOD_MASK_ALT) return (HSV){HSV_GREEN};
+    if (mods & MOD_MASK_GUI) return (HSV){HSV_WHITE};
+    return (HSV){HSV_BLACK};
+}
+
+static HSV layer_indicator_hsv(uint8_t layer) {
+    switch (layer) {
+        case LAYER_FUNCTION:
+            return (HSV){HSV_AZURE};
+        case LAYER_NAVIGATION:
+            return (HSV){HSV_CHARTREUSE};
+        case LAYER_MEDIA:
+            return (HSV){HSV_CORAL};
+        case LAYER_POINTER:
+            return (HSV){HSV_CYAN};
+        case LAYER_SYMBOLS:
+            return (HSV){HSV_GOLD};
+        case LAYER_NUMERAL:
+            return (HSV){HSV_PINK};
+        default:
+            return (HSV){HSV_BLACK};
+    }
+}
+
+static RGB indicator_rgb(HSV hsv) {
+    if (hsv.v > 0) {
+        hsv.v = rgb_matrix_config.hsv.v;
+    }
+    return hsv_to_rgb(hsv);
+}
+
+RGB dilemma_layer_indicator_rgb(uint8_t layer) {
+    return indicator_rgb(layer_indicator_hsv(layer));
+}
+
+RGB argos_rgb_default_layer_color(uint8_t layer) {
+    return hsv_to_rgb(layer_indicator_hsv(layer));
+}
+
 bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     // underglow to honor RM_TOGG
     if (!rgb_matrix_is_enabled()) {
         return false;
     }
 
-    uint8_t layer = get_highest_layer(layer_state);
-    uint8_t mods  = get_mods() | get_oneshot_mods();
+    uint8_t layer        = get_highest_layer(layer_state);
+    uint8_t mods         = get_mods() | get_oneshot_mods();
+    HSV     modifier_hsv = modifier_indicator_hsv(mods);
+    RGB     layer_rgb    = dilemma_layer_indicator_rgb(layer);
+    RGB     modifier_rgb = indicator_rgb(modifier_hsv);
 
-    // 1. Loop through all the LEDs to determine their color individualistically
     for (uint8_t i = led_min; i <= led_max; i++) {
-        if (g_led_config.flags[i] == 2) { // Target only Underglow
-            // Show modifiers beside screen/trackpad
-            bool is_modifier_zone = (i >= 14 && i <= 17) || (i >= 50 && i <= 53);
-
-            HSV hsv = (HSV){HSV_BLACK}; // Default to off
-
-            // 2. If mods are active AND this specific LED is in the modifier
-            // zone, use mod colors
-            if (mods && is_modifier_zone) {
-                if (mods & MOD_MASK_SHIFT)
-                    hsv = (HSV){HSV_RED};
-                else if (mods & MOD_MASK_CTRL)
-                    hsv = (HSV){HSV_BLUE};
-                else if (mods & MOD_MASK_ALT)
-                    hsv = (HSV){HSV_GREEN};
-                else if (mods & MOD_MASK_GUI)
-                    hsv = (HSV){HSV_WHITE};
-            }
-            // 3. Otherwise, use standard layer colors for the underglow
-            else {
-                switch (layer) {
-                        // clang-format off
-                    case LAYER_FUNCTION:   hsv = (HSV){HSV_AZURE};       break;
-                    case LAYER_NAVIGATION: hsv = (HSV){HSV_CHARTREUSE};  break;
-                    case LAYER_MEDIA:      hsv = (HSV){HSV_CORAL};       break;
-                    case LAYER_POINTER:    hsv = (HSV){HSV_CYAN};        break;
-                    case LAYER_SYMBOLS:    hsv = (HSV){HSV_GOLD};        break;
-                    case LAYER_NUMERAL:    hsv = (HSV){HSV_PINK};        break;
-                        // clang-format on
-                }
-            }
-
-            // 4. Apply global brightness matching BEFORE converting to RGB
-            if (hsv.v > 0) {
-                hsv.v = rgb_matrix_config.hsv.v;
-            }
-
-            RGB rgb = hsv_to_rgb(hsv);
+        if (g_led_config.flags[i] & LED_FLAG_UNDERGLOW) {
+            bool is_modifier_zone = (i >= LED_MODIFIER_ZONE_LEFT_FIRST && i <= LED_MODIFIER_ZONE_LEFT_LAST) || (i >= LED_MODIFIER_ZONE_RIGHT_FIRST && i <= LED_MODIFIER_ZONE_RIGHT_LAST);
+            RGB  rgb              = mods && is_modifier_zone ? modifier_rgb : layer_rgb;
             RGB_MATRIX_INDICATOR_SET_COLOR(i, rgb.r, rgb.g, rgb.b);
         }
     }

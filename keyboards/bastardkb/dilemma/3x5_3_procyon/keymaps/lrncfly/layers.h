@@ -36,4 +36,8 @@ static inline const char *dilemma_layer_name(uint8_t layer) {
     return NULL;
 }
 
+#ifdef RGB_MATRIX_ENABLE
+RGB dilemma_layer_indicator_rgb(uint8_t layer);
+#endif
+
 #endif
