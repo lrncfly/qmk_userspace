@@ -39,6 +39,7 @@ accident.
 | Date | Plan item | Confirmed intent / constraints | Verification |
 |------|-----------|---------------------------------|--------------|
 | 2026-10-08 | Priority 1: screen module boundaries | The physical left/LCD half alone initializes and renders the dashboard. On the base layer, show `SECONDARY` when that half is not the current master. Preserve current data sources and precedence: local QMK state, Argos layer RGB when available followed by the keymap palette, and pointing-mode DPI. | External firmware build succeeded and the user verified the behavior on the keyboard. |
+| 2026-10-08 | Priority 2: chord semantics | Any active non-base layer can prefix a chord; layer precedes modifiers, which precede terminal keys. Held-context strokes are shown and recorded as a sequence (e.g. `CTRL + K CTRL + 0`); context changes end a sequence. Same-timestamp terminal key events form one simultaneous chord. Standalone dual-role taps are shown/recorded; ordinary unmodified keys are not. Preserve observed modifier order (Ctrl/Shift/Alt/GUI tie-break), US/QWERTY formatting with Shift/Caps Lock XOR, and QMK key-name fallback abbreviations such as `SPC`. Keep the 5-second display/sequence idle timeout (reset per stroke), three-entry history, 20-second history expiry, and zero-value config controls. | External firmware build succeeded and the user confirmed it ran successfully on the keyboard. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -59,18 +60,24 @@ accident.
 
 ## Priority 2: Extract chord tracking and formatting
 
-- [ ] **Intent gate:** Confirm chord semantics before extracting them: what is
+- [x] **Intent gate:** Confirm chord semantics before extracting them: what is
   a chord, when does it complete or expire, modifier ordering, history
   retention, and how taps/layer-taps should appear.
-- [ ] Trace and record the current behavior for shifted characters, Caps Lock,
+- [x] Trace and record the current behavior for shifted characters, Caps Lock,
   modifier taps, layer taps, simultaneous events, and non-printable key names.
-- [ ] After confirmation, separate modifier-order tracking, chord completion,
+- [x] After confirmation, separate modifier-order tracking, chord completion,
   and chord history from display rendering without changing those semantics.
-- [ ] Move US-layout keycode-to-character conversion and keycode text
+- [x] Move US-layout keycode-to-character conversion and keycode text
   formatting into the chord component, preserving the confirmed layout rules.
-- [ ] Keep LVGL object creation and updates in the screen/display component;
+- [x] Keep LVGL object creation and updates in the screen/display component;
   define a small interface for passing formatted chord and history updates.
 - [ ] Add focused tests or testable cases for the confirmed chord behavior.
+- [x] Verify with an external firmware build and keyboard tests: firmware built
+  and ran successfully on the keyboard.
+- [ ] Confirm the detailed behavior checks: standalone
+  dual-role taps; modifier ordering; layer + modifier + key formatting;
+  same-context sequences and 5-second reset; context changes; simultaneous
+  same-timestamp keys; history capacity, expiry, and zero-value settings.
 
 ## Priority 3: Remove or complete unused screen-module switching
 

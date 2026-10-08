@@ -8,12 +8,24 @@
 
 #include "bk_pointing_device.h"
 
-void lrncfly_screen_get_dashboard_data(screen_dashboard_data_t *data) {
-    data->layer = get_highest_layer(layer_state);
-    data->layer_name = data->layer == LAYER_BASE ? "BASE" : dilemma_layer_name(data->layer);
-    if (data->layer_name == NULL) {
-        data->layer_name = "UNKNOWN";
+static const char *get_layer_name(uint8_t layer) {
+    if (layer == LAYER_BASE) {
+        return "BASE";
     }
+    const char *name = dilemma_layer_name(layer);
+    return name ? name : "UNKNOWN";
+}
+
+const char *lrncfly_screen_get_chord_layer_name(void) {
+    uint8_t layer = get_highest_layer(layer_state);
+    return layer == LAYER_BASE ? NULL : get_layer_name(layer);
+}
+
+void lrncfly_screen_get_dashboard_data(screen_dashboard_data_t *data) {
+    *data = (screen_dashboard_data_t){0};
+    data->layer = get_highest_layer(layer_state);
+    data->layer_name = get_layer_name(data->layer);
+    data->chord_layer_name = data->layer == LAYER_BASE ? NULL : data->layer_name;
     data->status_text = data->layer == LAYER_BASE && !is_keyboard_master() ? "SECONDARY" : data->layer_name;
 
     switch (data->layer) {
