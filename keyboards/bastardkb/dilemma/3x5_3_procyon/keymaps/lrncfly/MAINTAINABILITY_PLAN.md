@@ -38,22 +38,22 @@ accident.
 
 | Date | Plan item | Confirmed intent / constraints | Verification |
 |------|-----------|---------------------------------|--------------|
-|      |           |                                 |              |
+| 2026-10-08 | Priority 1: screen module boundaries | The physical left/LCD half alone initializes and renders the dashboard. On the base layer, show `SECONDARY` when that half is not the current master. Preserve current data sources and precedence: local QMK state, Argos layer RGB when available followed by the keymap palette, and pointing-mode DPI. | External firmware build succeeded and the user verified the behavior on the keyboard. |
 
 ## Priority 1: Clarify module boundaries
 
-- [ ] **Intent gate:** Trace what the screen is expected to display, which half
+- [x] **Intent gate:** Trace what the screen is expected to display, which half
   owns it, and what it should do when split state or a data source is
   unavailable. Confirm those expectations before changing dependencies.
-- [ ] Define and record the screen module's agreed responsibilities: display
+- [x] Define and record the screen module's agreed responsibilities: display
   hardware, widgets, and rendering.
-- [ ] Identify the data the screen needs from the keymap, Argos, and the
+- [x] Identify the data the screen needs from the keymap, Argos, and the
   pointing-device module; confirm the intended source and update semantics for
   each value.
-- [ ] After confirming the desired ownership, add a small explicit interface or
+- [x] After confirming the desired ownership, add a small explicit interface or
   adapter for layer names/colors and device metrics instead of having the
   screen module directly depend on those implementations.
-- [ ] Confirm the screen module can be built without accidentally relying on
+- [x] Confirm the screen module can be built without accidentally relying on
   include-order or unrelated module internals, while preserving the agreed
   runtime behavior.
 

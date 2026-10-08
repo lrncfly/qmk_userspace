@@ -15,3 +15,5 @@ VIA_ENABLE = yes
 WPM_ENABLE = no
 KEYCODE_STRING_ENABLE = yes
 # VIAL_ENABLE = yes
+
+SRC += screen_data.c
