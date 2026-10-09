@@ -44,10 +44,11 @@ accident.
 | 2026-10-09 | Priority 2: compact layer sequences and modified key display | For repeated strokes in the same active non-base layer, show the layer and physically held modifier context once, followed by only the terminal keys (e.g. `NUMERAL` then `1 2 3`); apply this to live overlay and history. Preserve full per-stroke context formatting for modifier-only sequences. Include active weak/one-shot modifiers in the context, but treat modifiers encoded in an individual QMK modified keycode as that key's output formatting rather than held context, so shifted symbols on one layer remain a single sequence. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: standalone dual-role taps | Do not show or record standalone tap outputs from mod-tap/layer-tap keys (e.g. `S`, `D`, `SPC`, `TAB`, `ESC`). Preserve those tap outputs when they occur under an independently active modifier or non-base layer context. Continue displaying keys used with a held modifier/layer role. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. The unrelated no-op layer-state callback was left for Priority 6. | Source search found no callers; external firmware build and deployment succeeded. |
-| 2026-10-09 | Priority 4/5: RGB defaults and indicators | Keep the existing layer palette. On first Argos initialization, seed only underglow LEDs for non-base layers; leave base and key LEDs uncustomized, and do not overwrite existing EEPROM settings. Use the first metadata-marked underglow LED for the LCD layer color. Restrict modifier indicators to LEDs 10, 11, 12, 47, 48, and 49, assigning active Shift, Ctrl, Alt, and GUI colors in that priority order. On BASE, do not paint the underglow layer black so normal RGB effects remain visible. | Implementation complete; external build and keyboard verification pending. |
-| 2026-10-09 | Priority 4: layer metadata and capacity | Keep seven active keymap layers at IDs 0–6, reserve ID 7 for VIA/menu, and retain dynamic-keymap capacity of 8. Define IDs/count/reserved slot together and expose names and palette colors from one metadata table. Keep the 72-LED count explicit as keyboard hardware configuration, with `RGBLIGHT_LED_COUNT` derived from it. | Build pending. |
-| 2026-10-09 | Priority 6: dormant keymap code | Remove the optional console text macros and RGB LED debug keycodes/state; remove the no-op `layer_state_set_user()` callback. Keep the LCD brightness controls and give their custom keycodes an `LRNCFLY_` prefix. | Approved and implemented; whitespace/editor diagnostics pass; external firmware build pending. |
+| 2026-10-09 | Priority 4/5: RGB defaults and indicators | Keep the existing layer palette. On first Argos initialization, seed only underglow LEDs for non-base layers; leave base and key LEDs uncustomized, and do not overwrite existing EEPROM settings. Use the first metadata-marked underglow LED for the LCD layer color. Restrict modifier indicators to LEDs 10, 11, 12, 47, 48, and 49, assigning active Shift, Ctrl, Alt, and GUI colors in that priority order. The initial expectation that normal RGB effects remain visible on BASE underglow is superseded by Quentin's test clarification; see the parked follow-up below. | Build succeeded; LCD/layer/chord behavior confirmed. Argos custom, disabled, passthrough, and split-sync cases not tested. BASE underglow mismatch found and parked. |
+| 2026-10-09 | Priority 4: layer metadata and capacity | Keep seven active keymap layers at IDs 0–6, reserve ID 7 for VIA/menu, and retain dynamic-keymap capacity of 8. Define IDs/count/reserved slot together and expose names and palette colors from one metadata table. Keep the 72-LED count explicit as keyboard hardware configuration, with `RGBLIGHT_LED_COUNT` derived from it. | Build succeeded; user confirmed all seven layers and the menu slot work. |
+| 2026-10-09 | Priority 6: dormant keymap code | Remove the optional console text macros and RGB LED debug keycodes/state; remove the no-op `layer_state_set_user()` callback. Keep the LCD brightness controls and give their custom keycodes an `LRNCFLY_` prefix. | Approved, built successfully, and committed. |
 | 2026-10-09 | Priority 7: headers and layout organization | Keep the empty `keymap.h` as an intentional placeholder. Keep the RGB layer API declaration in `layers.h`, which is now self-contained with its QMK type include. Keep the layout macros together in `keymap.c`; they are only used there. | Confirmed by Quentin; no additional layout/header refactor needed. |
+| 2026-10-09 | Follow-up: BASE underglow behavior | BASE underglow must not display normal RGB Matrix effects. Current keymap indicator code leaves BASE underglow untouched, so the active RGB effect can render there; this is a behavior mismatch to address separately. Parked by Quentin during verification; exact desired BASE appearance/override behavior is still to be confirmed before implementation. | Reported during keyboard verification; no change made. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -82,10 +83,11 @@ accident.
 - [ ] Add focused tests or testable cases for the confirmed chord behavior.
 - [x] Verify with an external firmware build and keyboard tests: firmware built
   and ran successfully on the keyboard.
-- [ ] Confirm the detailed behavior checks: standalone
+- [x] Confirm the detailed behavior checks: standalone
   dual-role taps; modifier ordering; layer + modifier + key formatting;
   same-context sequences and 5-second reset; context changes; simultaneous
-  same-timestamp keys; history capacity, expiry, and zero-value settings.
+  same-timestamp keys; history capacity, expiry, and zero-value settings. The
+  user confirmed dashboard and chord behavior during keyboard verification.
 
 ## Priority 3: Remove or complete unused screen-module switching
 
@@ -181,14 +183,19 @@ accident.
 
 ## Verification checklist
 
-- [ ] Before behavior-affecting tests, confirm expected outcomes with Quentin
+- [x] Before behavior-affecting tests, confirm expected outcomes with Quentin
   and add them to the decision log.
-- [ ] Build `bastardkb/dilemma/3x5_3_procyon:lrncfly`.
-- [ ] Confirm all seven keymap layers and the dynamic/menu layer configuration
+- [x] Build `bastardkb/dilemma/3x5_3_procyon:lrncfly`. Quentin reported build
+  success after commits `20673a3` and `62303a3`.
+- [x] Confirm all seven keymap layers and the dynamic/menu layer configuration
   behave as intended.
-- [ ] Test split operation with the LCD half primary and with the other half
+- [x] Test split operation with the LCD half primary and with the other half
   primary, confirming intended display ownership and status.
-- [ ] Test LCD layer labels/colors, chord display/history, RGB enabled/disabled,
-  and Argos per-layer custom colors against the confirmed RGB design.
+- [ ] Test LCD layer labels/colors and chord display/history; user confirmed
+  these work. Finish RGB enabled/disabled and Argos custom-color checks after
+  the parked BASE underglow behavior is addressed.
 - [ ] Confirm user-saved Argos RGB settings survive firmware updates and are
   not overwritten by default initialization.
+- [ ] Resolve parked follow-up: suppress normal RGB Matrix effects on BASE
+  underglow, after confirming the intended BASE appearance and interaction
+  with RGB enable/disable and Argos custom entries.
