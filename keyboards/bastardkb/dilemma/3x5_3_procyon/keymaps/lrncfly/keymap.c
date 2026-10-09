@@ -360,9 +360,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         switch (get_highest_layer(state)) {
             case LAYER_NAVIGATION:
             case LAYER_POINTER:
-                // When on trackpad modes, you can point the router to the factory
-                // screen base which has the mouse tracking bars built inside it!
-                // set_current_module(0); // Index 0 is lcd_module_base upstream
                 break;
             default:
                 break;
