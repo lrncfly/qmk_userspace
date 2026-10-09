@@ -9,9 +9,6 @@
 #include "bk_pointing_device.h"
 
 static const char *get_layer_name(uint8_t layer) {
-    if (layer == LAYER_BASE) {
-        return "BASE";
-    }
     const char *name = dilemma_layer_name(layer);
     return name ? name : "UNKNOWN";
 }

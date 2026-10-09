@@ -1,0 +1,13 @@
+#pragma once
+
+#define DILEMMA_LAYER_COUNT 8
+
+#define LAYER_BASE 0
+#define LAYER_FUNCTION 1
+#define LAYER_NAVIGATION 2
+#define LAYER_MEDIA 3
+#define LAYER_POINTER 4
+#define LAYER_NUMERAL 5
+#define LAYER_SYMBOLS 6
+
+#define DILEMMA_LAYER_MENU (DILEMMA_LAYER_COUNT - 1)
