@@ -22,14 +22,10 @@
 #include "screen.h"
 #include "argos_rgb.h"
 
-#ifdef CONSOLE_ENABLE
-#    include "print.h"
-#endif
-
-enum custom_keycodes { QK_REG = SAFE_RANGE, QK_HELP, MY_DB_TOGG, MY_DB_STEP, LCD_BUP, LCD_BDN };
-
-bool led_debug_enabled   = false;
-int  current_debug_index = 0;
+enum lrncfly_keycodes {
+    LRNCFLY_LCD_BRIGHTNESS_UP = SAFE_RANGE,
+    LRNCFLY_LCD_BRIGHTNESS_DOWN,
+};
 
 const uint16_t PROGMEM combo4[] = {KC_V, KC_B, COMBO_END};
 
@@ -92,7 +88,7 @@ combo_t key_combos[] = {COMBO(combo4, KC_RBRC)};
 */
 #define LAYOUT_LAYER_MEDIA                                                                    \
     RM_VALD, RM_PREV, RM_TOGG, RM_NEXT, RM_VALU, RM_SATD, RM_PREV, RM_TOGG, RM_NEXT, RM_SATU, \
-    LCD_BDN, KC_VOLD, KC_MUTE, KC_VOLU, LCD_BUP, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
+    LRNCFLY_LCD_BRIGHTNESS_DOWN, KC_VOLD, KC_MUTE, KC_VOLU, LRNCFLY_LCD_BRIGHTNESS_UP, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
     _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
                       _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY, KC_MUTE
 
@@ -226,48 +222,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 
     switch (keycode) {
-#ifdef CONSOLE_ENABLE
-        case QK_REG:
-            if (record->event.pressed) {
-                SEND_STRING_DELAY("Regards,\nQ. Lebastard\nBastard Keyboards", 5);
-            }
-            break;
-        case QK_HELP:
-            if (record->event.pressed) {
-                SEND_STRING_DELAY("I hope this helps, let me know if there's anything else!", 5);
-            }
-            break;
-        case MY_DB_TOGG:
-            if (record->event.pressed) {
-                led_debug_enabled = !led_debug_enabled;
-                if (led_debug_enabled) {
-                    uprintf("RGB Debug: ON\n");
-                    rgb_matrix_enable_noeeprom();
-                    // STOP the animation engine from drawing
-                    rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
-                    rgb_matrix_set_color_all(0, 0, 0);
-                    current_debug_index = 0;
-                } else {
-                    uprintf("RGB Debug: OFF\n");
-                    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-                }
-            }
-            return false;
-        case MY_DB_STEP:
-            if (record->event.pressed && led_debug_enabled) {
-                current_debug_index = (current_debug_index + 1) % RGB_MATRIX_LED_COUNT;
-
-                // We still print to console here so you can see the log
-                uprintf("Index: %d | Flags: %d\n", current_debug_index, g_led_config.flags[current_debug_index]);
-            }
-            return false;
-#endif // CONSOLE_ENABLE
-        case LCD_BUP:
+        case LRNCFLY_LCD_BRIGHTNESS_UP:
             if (record->event.pressed) {
                 backlight_increase(); // Steps up by 1 (out of 16)
             }
             return false;
-        case LCD_BDN:
+        case LRNCFLY_LCD_BRIGHTNESS_DOWN:
             if (record->event.pressed) {
                 backlight_decrease(); // Steps down by 1 (out of 16)
             }
@@ -343,19 +303,6 @@ bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
 
 void housekeeping_task_user(void) {
     housekeeping_custom_dashboard();
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    if (is_keyboard_master() && is_keyboard_left()) {
-        switch (get_highest_layer(state)) {
-            case LAYER_NAVIGATION:
-            case LAYER_POINTER:
-                break;
-            default:
-                break;
-        }
-    }
-    return state;
 }
 
 /*                                                                      \

@@ -43,9 +43,11 @@ accident.
 | 2026-10-08 | Brightness defaults and RGB ceiling | Default LCD backlight to level 10 of 16 and RGB Matrix brightness to 96; reduce the configured RGB maximum from 176 to 96. Keep existing EEPROM-saved settings intact; these defaults apply when settings are initialized or EEPROM is cleared, while the new RGB maximum limits values applied through QMK brightness controls. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: compact layer sequences and modified key display | For repeated strokes in the same active non-base layer, show the layer and physically held modifier context once, followed by only the terminal keys (e.g. `NUMERAL` then `1 2 3`); apply this to live overlay and history. Preserve full per-stroke context formatting for modifier-only sequences. Include active weak/one-shot modifiers in the context, but treat modifiers encoded in an individual QMK modified keycode as that key's output formatting rather than held context, so shifted symbols on one layer remain a single sequence. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: standalone dual-role taps | Do not show or record standalone tap outputs from mod-tap/layer-tap keys (e.g. `S`, `D`, `SPC`, `TAB`, `ESC`). Preserve those tap outputs when they occur under an independently active modifier or non-base layer context. Continue displaying keys used with a held modifier/layer role. | Build and keyboard verification pending. |
-| 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. Leave the unrelated no-op layer-state callback for the later dormant-keymap-code review. | Source search found no callers; external firmware build and deployment succeeded. |
+| 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. The unrelated no-op layer-state callback was left for Priority 6. | Source search found no callers; external firmware build and deployment succeeded. |
 | 2026-10-09 | Priority 4/5: RGB defaults and indicators | Keep the existing layer palette. On first Argos initialization, seed only underglow LEDs for non-base layers; leave base and key LEDs uncustomized, and do not overwrite existing EEPROM settings. Use the first metadata-marked underglow LED for the LCD layer color. Restrict modifier indicators to LEDs 10, 11, 12, 47, 48, and 49, assigning active Shift, Ctrl, Alt, and GUI colors in that priority order. On BASE, do not paint the underglow layer black so normal RGB effects remain visible. | Implementation complete; external build and keyboard verification pending. |
 | 2026-10-09 | Priority 4: layer metadata and capacity | Keep seven active keymap layers at IDs 0–6, reserve ID 7 for VIA/menu, and retain dynamic-keymap capacity of 8. Define IDs/count/reserved slot together and expose names and palette colors from one metadata table. Keep the 72-LED count explicit as keyboard hardware configuration, with `RGBLIGHT_LED_COUNT` derived from it. | Build pending. |
+| 2026-10-09 | Priority 6: dormant keymap code | Remove the optional console text macros and RGB LED debug keycodes/state; remove the no-op `layer_state_set_user()` callback. Keep the LCD brightness controls and give their custom keycodes an `LRNCFLY_` prefix. | Approved and implemented; whitespace/editor diagnostics pass; external firmware build pending. |
+| 2026-10-09 | Priority 7: headers and layout organization | Keep the empty `keymap.h` as an intentional placeholder. Keep the RGB layer API declaration in `layers.h`, which is now self-contained with its QMK type include. Keep the layout macros together in `keymap.c`; they are only used there. | Confirmed by Quentin; no additional layout/header refactor needed. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -147,32 +149,35 @@ accident.
 
 ## Priority 6: Prune dormant keymap code
 
-- [ ] **Intent gate:** Ask whether console text macros and RGB LED debugging
+- [x] **Intent gate:** Ask whether console text macros and RGB LED debugging
   are intentional tools that should remain available, and how the user expects
   to enable and operate them.
-- [ ] If retained, isolate debug keycodes/state behind an agreed debug build
+- [x] If retained, isolate debug keycodes/state behind an agreed debug build
   option and document its activation behavior.
-- [ ] Otherwise remove only the confirmed-unused debug code, globals, and
+- [x] Otherwise remove only the confirmed-unused debug code, globals, and
   custom keycodes.
-- [ ] **Intent gate:** Confirm whether the no-op `layer_state_set_user()`
+- [x] **Intent gate:** Confirm whether the no-op `layer_state_set_user()`
   callback or its commented screen-routing behavior represents planned
   functionality.
-- [ ] Remove the callback/commented behavior only if no active or planned
+- [x] Remove the callback/commented behavior only if no active or planned
   behavior needs it.
-- [ ] Prefix remaining custom keycodes with an agreed keymap-specific name,
+- [x] Prefix remaining custom keycodes with an agreed keymap-specific name,
   preserving key positions and behaviors.
 
 ## Priority 7: Small layout/header cleanup
 
-- [ ] **Intent gate:** Confirm whether the empty `keymap.h` is intentionally
+- [x] **Intent gate:** Confirm whether the empty `keymap.h` is intentionally
   reserved for generated code, tooling, or future use.
-- [ ] Remove it and its include only if no such dependency exists.
-- [ ] Confirm the intended owner and users of the `RGB` declaration in
+- [x] Remove it and its include only if no such dependency exists. It is being
+  kept as an intentional placeholder.
+- [x] Confirm the intended owner and users of the `RGB` declaration in
   `layers.h`; then make the header self-contained or move the declaration to
-  an appropriate QMK-aware header.
-- [ ] Keep the layer layout macros together unless they are reused or become
+  an appropriate QMK-aware header. Quentin confirmed it belongs in the
+  self-contained `layers.h`.
+- [x] Keep the layer layout macros together unless they are reused or become
   difficult to navigate. Before splitting them, confirm the desired reuse and
-  ownership rather than splitting solely to reduce file length.
+  ownership rather than splitting solely to reduce file length. They are only
+  used in `keymap.c`, so no split is needed.
 
 ## Verification checklist
 
