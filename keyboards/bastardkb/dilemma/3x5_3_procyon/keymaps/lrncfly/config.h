@@ -61,7 +61,6 @@
 // LED_FLAG_MODIFIER, LED_FLAG_UNDERGLOW, LED_FLAG_NONE }
 // Sets the flags which can be cycled through.
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINDROPS
-#define RGB_MATRIX_DEFAULT_VAL 128
 #define RGB_MATRIX_LED_COUNT 72
 // Fix upstream Bastardkb module macro oversight for RGB Matrix setups
 #if defined(RGB_MATRIX_ENABLE) && !defined(RGBLIGHT_LED_COUNT)
