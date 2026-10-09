@@ -44,6 +44,7 @@ accident.
 | 2026-10-09 | Priority 2: compact layer sequences and modified key display | For repeated strokes in the same active non-base layer, show the layer and physically held modifier context once, followed by only the terminal keys (e.g. `NUMERAL` then `1 2 3`); apply this to live overlay and history. Preserve full per-stroke context formatting for modifier-only sequences. Include active weak/one-shot modifiers in the context, but treat modifiers encoded in an individual QMK modified keycode as that key's output formatting rather than held context, so shifted symbols on one layer remain a single sequence. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: standalone dual-role taps | Do not show or record standalone tap outputs from mod-tap/layer-tap keys (e.g. `S`, `D`, `SPC`, `TAB`, `ESC`). Preserve those tap outputs when they occur under an independently active modifier or non-base layer context. Continue displaying keys used with a held modifier/layer role. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. Leave the unrelated no-op layer-state callback for the later dormant-keymap-code review. | Source search found no callers; external firmware build and deployment succeeded. |
+| 2026-10-09 | Priority 4/5: RGB defaults and indicators | Keep the existing layer palette. On first Argos initialization, seed only underglow LEDs for non-base layers; leave base and key LEDs uncustomized, and do not overwrite existing EEPROM settings. Use the first metadata-marked underglow LED for the LCD layer color. Restrict modifier indicators to LEDs 10, 11, 12, 47, 48, and 49, assigning active Shift, Ctrl, Alt, and GUI colors in that priority order. On BASE, do not paint the underglow layer black so normal RGB effects remain visible. | Implementation complete; external build and keyboard verification pending. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -98,42 +99,45 @@ accident.
 
 ## Priority 4: Consolidate layer and RGB configuration
 
-- [ ] **Intent gate (RGB design):** Map the RGB behavior across the keymap
+- [x] **Intent gate (RGB design):** Map the RGB behavior across the keymap
   palette, keymap indicator callback, Argos defaults and EEPROM entries,
   keyboard LED flags, RGB Matrix settings, split synchronization, and screen
   color display. Summarize the current behavior and ask Quentin to confirm the
   intended color for each layer, which LEDs/zones receive it, how modifiers
   override it, brightness behavior, and the role of Argos customization.
-- [ ] Record the confirmed RGB design in the decision log before consolidating
+- [x] Record the confirmed RGB design in the decision log before consolidating
   configuration. Do not replace Argos settings or palette values merely to
   make duplicated values agree.
-- [ ] **Intent gate (layers):** Confirm the meaning of each layer, the reserved
+- [x] **Intent gate (layers):** Confirm the meaning of each layer, the reserved
   menu layer, dynamic-keymap capacity, and any intentional unused layer slots.
 - [ ] After confirmation, define layer IDs and count in one authoritative
   place, with the reserved/menu layer related to that set.
 - [ ] Keep layer names and per-layer RGB palette together or expose them
   through a single layer metadata interface, preserving the confirmed design.
-- [ ] Confirm the physical meaning of LED zones and modifier indicators before
+- [x] Confirm the physical meaning of LED zones and modifier indicators before
   centralizing their boundaries in hardware-specific configuration.
-- [ ] Check whether keyboard LED metadata can replace literal LED indices
-  without changing which LEDs are affected.
+- [x] Check whether keyboard LED metadata can replace literal LED indices
+  without changing which LEDs are affected. It identifies underglow LEDs but
+  does not distinguish the confirmed thumb cluster, so those six indices stay
+  explicit in the keymap.
 - [ ] Confirm the intended LED count and its source before revisiting
   `RGB_MATRIX_LED_COUNT` or other dimensions that might be derivable.
 
 ## Priority 5: Specify Argos RGB defaults and displayed-color semantics
 
-- [ ] **Intent gate:** Confirm default colors per layer, whether keymap palette
+- [x] **Intent gate:** Confirm default colors per layer, whether keymap palette
   should seed Argos defaults, how existing EEPROM customizations should behave,
   and whether defaults should change after a firmware update.
-- [ ] Trace Argos initialization, EEPROM load/write, JSON defaults, and
+- [x] Trace Argos initialization, EEPROM load/write, JSON defaults, and
   per-LED entries; record which source is authoritative in each lifecycle
-  state.
-- [ ] **Intent gate:** Confirm how the LCD should represent a layer when its
+  state. First-time Argos setup seeds the EEPROM; later startup loads the saved
+  entries without reseeding.
+- [x] **Intent gate:** Confirm how the LCD should represent a layer when its
   per-LED colors differ: a designated underglow LED, a common layer color, or
   another representative color.
-- [ ] Make the agreed choice explicit in the Argos color API rather than
+- [x] Make the agreed choice explicit in the Argos color API rather than
   relying on the first entry implicitly.
-- [ ] Preserve existing EEPROM customizations unless Quentin explicitly
+- [x] Preserve existing EEPROM customizations unless Quentin explicitly
   confirms a migration/reset behavior.
 - [ ] Verify agreed behavior for defaults, custom colors, disabled entries,
   passthrough entries, and split synchronization on both halves.

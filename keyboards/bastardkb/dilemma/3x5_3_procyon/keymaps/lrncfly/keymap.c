@@ -278,18 +278,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 };
 
 #ifdef RGB_MATRIX_ENABLE
-enum {
-    LED_MODIFIER_ZONE_LEFT_FIRST  = 14,
-    LED_MODIFIER_ZONE_LEFT_LAST   = 17,
-    LED_MODIFIER_ZONE_RIGHT_FIRST = 50,
-    LED_MODIFIER_ZONE_RIGHT_LAST  = 53,
-};
+static const uint8_t modifier_indicator_leds[] = {10, 11, 12, 47, 48, 49};
 
-static HSV modifier_indicator_hsv(uint8_t mods) {
-    if (mods & MOD_MASK_SHIFT) return (HSV){HSV_RED};
-    if (mods & MOD_MASK_CTRL) return (HSV){HSV_BLUE};
-    if (mods & MOD_MASK_ALT) return (HSV){HSV_GREEN};
-    if (mods & MOD_MASK_GUI) return (HSV){HSV_WHITE};
+static HSV modifier_indicator_hsv(uint8_t mod) {
+    if (mod & MOD_MASK_SHIFT) return (HSV){HSV_RED};
+    if (mod & MOD_MASK_CTRL) return (HSV){HSV_BLUE};
+    if (mod & MOD_MASK_ALT) return (HSV){HSV_GREEN};
+    if (mod & MOD_MASK_GUI) return (HSV){HSV_WHITE};
     return (HSV){HSV_BLACK};
 }
 
@@ -328,22 +323,36 @@ RGB argos_rgb_default_layer_color(uint8_t layer) {
 }
 
 bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
-    // underglow to honor RM_TOGG
     if (!rgb_matrix_is_enabled()) {
         return false;
     }
 
-    uint8_t layer        = get_highest_layer(layer_state);
-    uint8_t mods         = get_mods() | get_oneshot_mods();
-    HSV     modifier_hsv = modifier_indicator_hsv(mods);
-    RGB     layer_rgb    = dilemma_layer_indicator_rgb(layer);
-    RGB     modifier_rgb = indicator_rgb(modifier_hsv);
+    const uint8_t layer = get_highest_layer(layer_state);
+    const uint8_t mods  = get_mods() | get_oneshot_mods();
+    const RGB     layer_rgb = dilemma_layer_indicator_rgb(layer);
 
-    for (uint8_t i = led_min; i <= led_max; i++) {
+    for (uint8_t i = led_min; i < led_max && i < RGB_MATRIX_LED_COUNT; i++) {
         if (g_led_config.flags[i] & LED_FLAG_UNDERGLOW) {
-            bool is_modifier_zone = (i >= LED_MODIFIER_ZONE_LEFT_FIRST && i <= LED_MODIFIER_ZONE_LEFT_LAST) || (i >= LED_MODIFIER_ZONE_RIGHT_FIRST && i <= LED_MODIFIER_ZONE_RIGHT_LAST);
-            RGB  rgb              = mods && is_modifier_zone ? modifier_rgb : layer_rgb;
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, rgb.r, rgb.g, rgb.b);
+            if (layer != LAYER_BASE) {
+                RGB_MATRIX_INDICATOR_SET_COLOR(i, layer_rgb.r, layer_rgb.g, layer_rgb.b);
+            }
+        }
+    }
+
+    static const uint8_t modifier_masks[] = {MOD_MASK_SHIFT, MOD_MASK_CTRL, MOD_MASK_ALT, MOD_MASK_GUI};
+    uint8_t              indicator_index = 0;
+    for (uint8_t i = 0; i < sizeof(modifier_masks) / sizeof(modifier_masks[0]); i++) {
+        if (!(mods & modifier_masks[i])) {
+            continue;
+        }
+        if (indicator_index >= sizeof(modifier_indicator_leds) / sizeof(modifier_indicator_leds[0])) {
+            break;
+        }
+
+        const uint8_t led = modifier_indicator_leds[indicator_index++];
+        const RGB      rgb = indicator_rgb(modifier_indicator_hsv(modifier_masks[i]));
+        if (g_led_config.flags[led] & LED_FLAG_UNDERGLOW) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(led, rgb.r, rgb.g, rgb.b);
         }
     }
 
