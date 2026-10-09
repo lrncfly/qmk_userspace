@@ -43,6 +43,7 @@ accident.
 | 2026-10-08 | Brightness defaults and RGB ceiling | Default LCD backlight to level 10 of 16 and RGB Matrix brightness to 96; reduce the configured RGB maximum from 176 to 96. Keep existing EEPROM-saved settings intact; these defaults apply when settings are initialized or EEPROM is cleared, while the new RGB maximum limits values applied through QMK brightness controls. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: compact layer sequences and modified key display | For repeated strokes in the same active non-base layer, show the layer and physically held modifier context once, followed by only the terminal keys (e.g. `NUMERAL` then `1 2 3`); apply this to live overlay and history. Preserve full per-stroke context formatting for modifier-only sequences. Include active weak/one-shot modifiers in the context, but treat modifiers encoded in an individual QMK modified keycode as that key's output formatting rather than held context, so shifted symbols on one layer remain a single sequence. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 2: standalone dual-role taps | Do not show or record standalone tap outputs from mod-tap/layer-tap keys (e.g. `S`, `D`, `SPC`, `TAB`, `ESC`). Preserve those tap outputs when they occur under an independently active modifier or non-base layer context. Continue displaying keys used with a held modifier/layer role. | Build and keyboard verification pending. |
+| 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. Leave the unrelated no-op layer-state callback for the later dormant-keymap-code review. | Source search found no callers; external firmware build and deployment succeeded. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -84,17 +85,16 @@ accident.
 
 ## Priority 3: Remove or complete unused screen-module switching
 
-- [ ] **Intent gate:** Ask whether module switching or the currently unused
+- [x] **Intent gate:** Ask whether module switching or the currently unused
   module hooks are planned functionality, external integration points, or
   abandoned scaffolding.
-- [ ] Trace callers, build integration, and any expected future module behavior;
+- [x] Trace callers, build integration, and any expected future module behavior;
   record which interfaces must remain stable.
-- [ ] If switching is not required, remove only the confirmed-unused module
+- [x] If switching is not required, remove only the confirmed-unused module
   IDs, callback-table fields, declarations, and `set_current_module()` stub.
-- [ ] If switching is required, agree on expected lifecycle and event behavior
-  before implementing loading, initialization, dispatch, and housekeeping.
-- [ ] Remove declarations in `screen.h` only after confirming they have no
+- [x] Remove declarations in `screen.h` only after confirming they have no
   caller or external contract.
+- [x] Verify the firmware build and dashboard behavior after removal.
 
 ## Priority 4: Consolidate layer and RGB configuration
 
