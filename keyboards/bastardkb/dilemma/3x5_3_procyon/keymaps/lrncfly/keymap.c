@@ -288,25 +288,6 @@ static HSV modifier_indicator_hsv(uint8_t mod) {
     return (HSV){HSV_BLACK};
 }
 
-static HSV layer_indicator_hsv(uint8_t layer) {
-    switch (layer) {
-        case LAYER_FUNCTION:
-            return (HSV){HSV_AZURE};
-        case LAYER_NAVIGATION:
-            return (HSV){HSV_CHARTREUSE};
-        case LAYER_MEDIA:
-            return (HSV){HSV_CORAL};
-        case LAYER_POINTER:
-            return (HSV){HSV_CYAN};
-        case LAYER_SYMBOLS:
-            return (HSV){HSV_GOLD};
-        case LAYER_NUMERAL:
-            return (HSV){HSV_PINK};
-        default:
-            return (HSV){HSV_BLACK};
-    }
-}
-
 static RGB indicator_rgb(HSV hsv) {
     if (hsv.v > 0) {
         hsv.v = rgb_matrix_config.hsv.v;
@@ -315,11 +296,11 @@ static RGB indicator_rgb(HSV hsv) {
 }
 
 RGB dilemma_layer_indicator_rgb(uint8_t layer) {
-    return indicator_rgb(layer_indicator_hsv(layer));
+    return indicator_rgb(dilemma_layer_indicator_hsv(layer));
 }
 
 RGB argos_rgb_default_layer_color(uint8_t layer) {
-    return hsv_to_rgb(layer_indicator_hsv(layer));
+    return hsv_to_rgb(dilemma_layer_indicator_hsv(layer));
 }
 
 bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {

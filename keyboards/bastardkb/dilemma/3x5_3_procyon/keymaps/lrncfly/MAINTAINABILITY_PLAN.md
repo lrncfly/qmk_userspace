@@ -45,6 +45,7 @@ accident.
 | 2026-10-09 | Priority 2: standalone dual-role taps | Do not show or record standalone tap outputs from mod-tap/layer-tap keys (e.g. `S`, `D`, `SPC`, `TAB`, `ESC`). Preserve those tap outputs when they occur under an independently active modifier or non-base layer context. Continue displaying keys used with a held modifier/layer role. | Build and keyboard verification pending. |
 | 2026-10-09 | Priority 3: screen lifecycle | Keep the dashboard's direct keymap lifecycle (init/load, key processing, housekeeping); module switching/pomodoro support is not planned. Remove its unused dispatch table, IDs, no-op selector, and stale dispatch/sync declarations. Leave the unrelated no-op layer-state callback for the later dormant-keymap-code review. | Source search found no callers; external firmware build and deployment succeeded. |
 | 2026-10-09 | Priority 4/5: RGB defaults and indicators | Keep the existing layer palette. On first Argos initialization, seed only underglow LEDs for non-base layers; leave base and key LEDs uncustomized, and do not overwrite existing EEPROM settings. Use the first metadata-marked underglow LED for the LCD layer color. Restrict modifier indicators to LEDs 10, 11, 12, 47, 48, and 49, assigning active Shift, Ctrl, Alt, and GUI colors in that priority order. On BASE, do not paint the underglow layer black so normal RGB effects remain visible. | Implementation complete; external build and keyboard verification pending. |
+| 2026-10-09 | Priority 4: layer metadata and capacity | Keep seven active keymap layers at IDs 0–6, reserve ID 7 for VIA/menu, and retain dynamic-keymap capacity of 8. Define IDs/count/reserved slot together and expose names and palette colors from one metadata table. Keep the 72-LED count explicit as keyboard hardware configuration, with `RGBLIGHT_LED_COUNT` derived from it. | Build pending. |
 
 ## Priority 1: Clarify module boundaries
 
@@ -110,9 +111,9 @@ accident.
   make duplicated values agree.
 - [x] **Intent gate (layers):** Confirm the meaning of each layer, the reserved
   menu layer, dynamic-keymap capacity, and any intentional unused layer slots.
-- [ ] After confirmation, define layer IDs and count in one authoritative
+- [x] After confirmation, define layer IDs and count in one authoritative
   place, with the reserved/menu layer related to that set.
-- [ ] Keep layer names and per-layer RGB palette together or expose them
+- [x] Keep layer names and per-layer RGB palette together or expose them
   through a single layer metadata interface, preserving the confirmed design.
 - [x] Confirm the physical meaning of LED zones and modifier indicators before
   centralizing their boundaries in hardware-specific configuration.
@@ -120,8 +121,10 @@ accident.
   without changing which LEDs are affected. It identifies underglow LEDs but
   does not distinguish the confirmed thumb cluster, so those six indices stay
   explicit in the keymap.
-- [ ] Confirm the intended LED count and its source before revisiting
-  `RGB_MATRIX_LED_COUNT` or other dimensions that might be derivable.
+- [x] Confirm the intended LED count and its source before revisiting
+  `RGB_MATRIX_LED_COUNT` or other dimensions that might be derivable. The
+  Procyon hardware LED map contains 72 entries; keep this explicit hardware
+  dimension and derive `RGBLIGHT_LED_COUNT` from it.
 
 ## Priority 5: Specify Argos RGB defaults and displayed-color semantics
 
