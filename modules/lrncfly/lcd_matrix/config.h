@@ -1,0 +1,3 @@
+#pragma once
+
+#define SPLIT_TRANSACTION_IDS_USER LCD_MATRIX_SYNC

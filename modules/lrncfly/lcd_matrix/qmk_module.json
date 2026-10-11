@@ -1,0 +1,11 @@
+{
+    "module_name": "LCD Matrix",
+    "maintainer": "lrncfly",
+    "license": "GPL-2.0-or-later",
+    "keycodes": [
+        {
+            "key": "LCD_MATRIX_TOGGLE",
+            "aliases": ["LCDMX"]
+        }
+    ]
+}
