@@ -1,7 +1,8 @@
 {
     "modules": [
-        "bastardkb/argos",
         "bastardkb/bk_pointing_device",
-        "lrncfly/screen"
+        "bastardkb/argos",
+        "bastardkb/lcd",
+        "lrncfly/lcd_matrix"
     ]
 }

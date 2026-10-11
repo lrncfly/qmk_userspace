@@ -13,6 +13,6 @@ by default.
 
 Layer and modifier state are sent through the normal split synchronization
 features; pointer mode, page selection, and trackball movement use the
-`LCD_MATRIX_SYNC` transaction. The module post-config merges that transaction
-with Argos RGB and LCD status transactions without changing either upstream
-module.
+`LCD_MATRIX_SYNC` transaction. The LCD status dashboard and Argos RGB
+synchronization use their own transaction IDs, registered by their respective
+modules.

@@ -19,7 +19,6 @@
 #include QMK_KEYBOARD_H
 #include "config.h"
 #include "layers.h"
-#include "screen.h"
 
 #ifdef CONSOLE_ENABLE
 #    include "print.h"
@@ -212,18 +211,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 // clang-format on
 #endif // ENCODER_MAP_ENABLE
 
-void keyboard_post_init_user(void) {
-    if (is_keyboard_left()) {
-        init_custom_dashboard();
-        load_custom_dashboard();
-    }
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        screen_note_activity();
-    }
-
     switch (keycode) {
 #ifdef CONSOLE_ENABLE
         case QK_REG:
@@ -268,7 +256,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             backlight_decrease(); // Steps down by 1 (out of 16)
             return false;
     }
-    screen_process_keycode(keycode, record);
     return true;
 };
 
@@ -329,10 +316,6 @@ bool rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     return false;
 }
 #endif
-
-void housekeeping_task_user(void) {
-    housekeeping_custom_dashboard();
-}
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     if (is_keyboard_master() && is_keyboard_left()) {
